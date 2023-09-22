@@ -13,20 +13,17 @@ module OmniAuth
 
       def exchange_code_for_token(client, code, redirect_uri, code_verifier = nil)
         data = {
-          code: code,
-          grant_type: 'authorization_code',
-          redirect_uri: redirect_uri
+          code:         code,
+          grant_type:   'authorization_code',
+          redirect_uri: redirect_uri,
+          client_id:    client.client_id
         }
 
         # Include the code verifier if provided
         data[:code_verifier] = code_verifier if code_verifier
 
-        if client.is_public?
-          data["client_id"] = client.client_id
-        end
-
         conn = Faraday.new do |conn|
-          if client.is_confidential?
+          if client.client_secret.present?
             conn.request :authorization, :basic, client.client_id, client.client_secret
           end
           # this must be 'application/x-www-form-urlencoded'
