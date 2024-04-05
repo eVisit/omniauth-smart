@@ -48,12 +48,13 @@ module OmniAuth
       def request_phase
         return unless has_backend?
 
-        issuer = request.params["iss"]
-        if issuer.nil?
+        issuer    = request.params["iss"]
+        client_id = ((JSON.parse Base64.decode64(request.params["launch"].split(".")[1]))["client_id"] rescue nil)
+        if issuer.nil? || client_id.nil?
           log :error, "No issuer specified"
-          fail! "Unknown issuer. Is your organization configured correctly?"
+          fail! "Unknown issuer or client_id. Is your organization configured correctly?"
         else
-          client = options[:backend].call(issuer)
+          client = options[:backend].call(issuer, client_id)
           if client
             if client.use_pkce
               verifier = generate_code_verifier
@@ -85,7 +86,10 @@ module OmniAuth
           return fail!("No smart client")
         end
 
-        @client = options[:backend].call(@issuer)
+        client_id = ((JSON.parse Base64.decode64(request.params['code'].split('.')[1]))['client_id'] rescue nil)
+
+        @client = options[:backend].call(@issuer, client_id)
+        debugger
         unless @client
           return fail!("No backend configured for #{@issuer}")
         end
