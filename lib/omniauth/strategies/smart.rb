@@ -89,7 +89,6 @@ module OmniAuth
         client_id = ((JSON.parse Base64.decode64(request.params['code'].split('.')[1]))['client_id'] rescue nil)
 
         @client = options[:backend].call(@issuer, client_id)
-        debugger
         unless @client
           return fail!("No backend configured for #{@issuer}")
         end
