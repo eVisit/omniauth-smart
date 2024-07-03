@@ -124,8 +124,8 @@ module OmniAuth
         # Also http://fhir.cerner.com/authorization/openid-connect/
         # Since we have communicated directly with the token server to obtain this token, we will consider this a trusted token and only confirm the audience to be our client_id
         @id_token = @token_response_json["id_token"]
-        puts "@token_response_json"
-        puts JSON.pretty_generate(@token_response_json)
+        log :info, "@token_response_json"
+        log :info, JSON.pretty_generate(@token_response_json)
         @id_data = JWT.decode(@id_token, nil, false, aud: @client.client_id, verify_aud: true)[0]
 
         # including @fhir_user_uri for future debugging in case the shape changes
