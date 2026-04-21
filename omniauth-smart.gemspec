@@ -21,7 +21,6 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "rubocop-rails_config", "1.17"
   gem.add_development_dependency "rubocop-performance", "~> 1.26"
   gem.add_development_dependency "bundler-audit", "~> 0.9.0"
-#  gem.add_development_dependency "activesupport"
 
   gem.name          = "omniauth-smart"
   gem.version       = OmniAuth::Smart::VERSION
