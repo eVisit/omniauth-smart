@@ -134,7 +134,11 @@ describe OmniAuth::Strategies::Smart do
 
       it 'redirects to emr authentication server' do
         stub_launch
-        get "/auth/smart?iss=#{CGI.escape(A_CLIENT_ISSUER)}"
+        launch_data = "xxxx.#{Base64.encode64({client_id: client_id}.to_json)}"
+
+        get "/auth/smart?iss=#{CGI.escape(A_CLIENT_ISSUER)}&launch=#{launch_data}"
+        puts last_response.inspect
+
         expect(last_response.status).to eq(302)
         expect(last_response.location).to match /my-server.org\/authorize/
       end
